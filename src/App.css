@@ -1,0 +1,30 @@
+.center {
+  display: flex;
+  height: 100vh;
+  /* width: 100%; */
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(360deg, #00246b, #cadcfc);
+}
+.box {
+  /* border: 5px solid #000; */
+  width: 1000px;
+  height: 90vh;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  text-align: center;
+  color: #000;
+  background-color: rgba(235, 235, 235, 0.615);
+  padding: 12px 24px;
+  box-shadow: 0px 1px 16px 8px rgba(0, 0, 0, 0.4);
+}
+b {
+  text-align: left;
+  margin-left: 24px;
+  text-decoration: underline;
+}
+h3 {
+  text-align: left;
+  margin-left: 24px;
+}
