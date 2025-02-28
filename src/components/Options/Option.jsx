@@ -7,7 +7,7 @@ const Option = ({ data, selectBookHanlder }) => {
       <form>
         <label for="book">Choose a Book:</label>
         <select
-          id="book"
+          id="book" 
           name="book"
           onChange={(e) => selectBookHanlder(e.target.value)}
         >
