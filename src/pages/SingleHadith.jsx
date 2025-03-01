@@ -1,36 +1,53 @@
 import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
-const SingleHadith = ({ hadithNum, hadithName }) => {
-  const [hadithData, setHadithData] = useState(null);
-  const [loading, setLoading] = useState(true); // Add a loading state
+const SingleHadith = ({ hadithName, hadithData, setHadithData }) => {
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false); // Track API errors
+  const { id, hadithNum } = useParams();
 
   useEffect(() => {
-    let url = `https://random-hadith-generator.vercel.app/${hadithName}/${hadithNum}`;
+    if (!hadithName || !hadithNum) return;
 
-    if (hadithName && hadithNum) {
-      setLoading(true); // Start loading
-      fetch(url)
-        .then((res) => res.json())
-        .then((data) => {
+    let url = `https://random-hadith-generator.vercel.app/${id}/${hadithNum}`;
+
+    setLoading(true);
+    setError(false);
+
+    fetch(url)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && data.data) {
           setHadithData(data);
-          setLoading(false); // Stop loading after data is fetched
-        })
-        .catch((error) => {
-          console.error("Error fetching Hadith:", error);
-          setLoading(false); // Stop loading on error
-        });
-    }
-  }, [hadithName, hadithNum]);
+        } else {
+          setHadithData(null);
+          setError(true);
+        }
+      })
+      .catch(() => {
+        setHadithData(null);
+        setError(true);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [id, hadithNum]);
 
+  // ✅ Show Loader when Data is Fetching
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-blue-50 to-purple-50">
-        <div className="text-2xl font-bold text-gray-800">Loading...</div>
+        <div className="flex flex-col items-center">
+          <div className="w-10 h-10 border-4 border-blue-500 border-dashed rounded-full animate-spin"></div>
+          <p className="text-lg font-bold text-gray-800 mt-4">Loading...</p>
+        </div>
       </div>
     );
   }
 
-  if (!hadithData) {
+  if (hadithData === null || error) {
+    console.log("hello");
+
     return (
       <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-blue-50 to-purple-50">
         <div className="text-2xl font-bold text-gray-800">
@@ -41,36 +58,32 @@ const SingleHadith = ({ hadithNum, hadithName }) => {
   }
 
   const { book, bookName, chapterName, hadith_english, header, refno } =
-    hadithData.data;
+    hadithData?.data || {};
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50">
-      <div className="max-w-4xl mx-auto bg-white p-8 rounded-xl shadow-lg">
-        {/* Book and Chapter Info */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">{book}</h1>
-          <p className="text-lg text-gray-600">{bookName}</p>
-          <p className="text-lg text-gray-600">{chapterName}</p>
-        </div>
+    // <div className="flex justify-center items-center min-h-screen bg-gray-100">
+    <div className="max-w-4xl h-full mx-auto bg-white p-8 rounded-xl">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-gray-800 mb-2">{book}</h1>
+        <p className="text-lg text-gray-600">{bookName}</p>
+        <p className="text-lg text-gray-600">{chapterName}</p>
+      </div>
 
-        {/* Hadith Header */}
-        <div className="mb-6">
-          <h2 className="text-2xl font-semibold text-gray-800">{header}</h2>
-        </div>
+      <div className="mb-6 border-t-2 pt-4 border-gray-300">
+        <h2 className="text-2xl font-semibold text-gray-800">{header}</h2>
+      </div>
 
-        {/* Hadith Text */}
-        <div className="mb-8">
-          <p className="text-lg text-gray-700 leading-relaxed">
-            {hadith_english}
-          </p>
-        </div>
+      <div className="mb-8">
+        <p className="text-lg text-gray-700 leading-relaxed">
+          {hadith_english}
+        </p>
+      </div>
 
-        {/* Reference */}
-        <div className="text-right">
-          <p className="text-sm text-gray-500">{refno}</p>
-        </div>
+      <div className="text-right">
+        <p className="text-sm text-gray-500">{refno}</p>
       </div>
     </div>
+    // </div>
   );
 };
 
