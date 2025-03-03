@@ -3,12 +3,11 @@ import { useParams } from "react-router-dom";
 
 const SingleHadith = ({ hadithName, hadithData, setHadithData }) => {
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false); // Track API errors
+  const [error, setError] = useState(false);
   const { id, hadithNum } = useParams();
 
   useEffect(() => {
     if (!hadithName || !hadithNum) return;
-
     let url = `https://random-hadith-generator.vercel.app/${id}/${hadithNum}`;
 
     setLoading(true);
@@ -33,7 +32,6 @@ const SingleHadith = ({ hadithName, hadithData, setHadithData }) => {
       });
   }, [id, hadithNum]);
 
-  // ✅ Show Loader when Data is Fetching
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-blue-50 to-purple-50">
@@ -61,7 +59,6 @@ const SingleHadith = ({ hadithName, hadithData, setHadithData }) => {
     hadithData?.data || {};
 
   return (
-    // <div className="flex justify-center items-center min-h-screen bg-gray-100">
     <div className="max-w-4xl h-full mx-auto bg-white p-8 rounded-xl">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-800 mb-2">{book}</h1>
@@ -82,8 +79,10 @@ const SingleHadith = ({ hadithName, hadithData, setHadithData }) => {
       <div className="text-right">
         <p className="text-sm text-gray-500">{refno}</p>
       </div>
+      <button className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition-all transform hover:scale-105 active:scale-95 flex justify-self-end mt-12">
+        Next
+      </button>
     </div>
-    // </div>
   );
 };
 
